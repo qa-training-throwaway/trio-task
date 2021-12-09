@@ -14,13 +14,13 @@ pipeline {
             steps {
                 sh """
                 echo "Stopping All Containers..."
-                docker stop $(docker ps -a --format "{{.ID}}")
+                docker stop \$(docker ps -a --format "{{.ID}}")
 
                 echo "Removing All Containers..."
-                docker rm $(docker ps -a --format "{{.ID}}")
+                docker rm \$(docker ps -a --format "{{.ID}}")
 
                 echo "Removing all Images..."
-                docker rmi $(docker images --format "{{.ID}}")
+                docker rmi \$(docker images --format "{{.ID}}")
 
                 docker network rm trio-network
                 """
