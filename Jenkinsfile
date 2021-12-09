@@ -32,21 +32,16 @@ pipeline {
                 }
             }
         }
-        stage('Create Network') {
-            steps {
-                sh """
-                docker network create trio-network
-                """
-            }
-        }
         stage('Run Containers') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'DOCKER_CREDENTIALS', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]){
+                withCredentials([usernamePassword(credentialsId: 'DOCKER_CREDENTIALS', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD'),
+                usernamePassword(credentialsId: 'MYSQL_CREDENTIALS', usernameVariable: 'MYSQL_USERNAME', passwordVariable: 'MYSQL_PASSWORD'),
+                ]){
                     sh """
                     docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
                     docker run -d \
                         --network trio-network \
-                        --volume db-volume:/var/lib/mysql \
+                        -e MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD} 
                         --name mysql flask-db-image
 
                     docker run -d \
