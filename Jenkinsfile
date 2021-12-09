@@ -12,7 +12,11 @@ pipeline {
         }
         stage('Build and Push DB Image') {
             steps {
-                echo 'Building.'
+                withCredentials([usernamePassword(credentialsId: 'MYSQL_CREDENTIALS', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+                    sh """
+                        echo ${USERNAME}
+                    """
+                }
             }
         }
     }
