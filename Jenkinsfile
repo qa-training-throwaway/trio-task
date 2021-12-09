@@ -8,6 +8,16 @@ pipeline {
             steps {
                 deleteDir()
                 checkout scm
+                sh """
+                echo "Stopping All Containers..."
+                docker stop \$(docker ps -a --format "{{.ID}}")
+
+                echo "Removing All Containers..."
+                docker rm \$(docker ps -a --format "{{.ID}}")
+
+                echo "Removing all Images..."
+                docker rmi \$(docker images --format "{{.ID}}")
+                """
             }
         }
         stage('Build and Push DB Image') {
