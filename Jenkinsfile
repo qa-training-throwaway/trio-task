@@ -15,7 +15,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'DOCKER_CREDENTIALS', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]){
                     sh """
                         docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
-                        docker build -t ${DOCKER_USERNAME}/flask-db-image db/
+                        docker build -t ${DOCKER_USERNAME}/flask-db-image db
                         docker push ${DOCKER_USERNAME}/flask-db-image
                     """
                 }
@@ -26,7 +26,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'DOCKER_CREDENTIALS', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]){
                     sh """
                         docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
-                        docker build -t ${DOCKER_USERNAME}/flask-image db/
+                        docker build -t ${DOCKER_USERNAME}/flask-image flask-app
                         docker push ${DOCKER_USERNAME}/flask-image
                     """
                 }
