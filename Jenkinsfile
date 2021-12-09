@@ -41,7 +41,7 @@ pipeline {
                     docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
                     docker run -d \
                         --network trio-network \
-                        -e MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD} 
+                        -e MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD} \
                         --name mysql flask-db-image
 
                     docker run -d \
