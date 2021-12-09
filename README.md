@@ -22,4 +22,3 @@ docker build -t flask-db-image .
 
 docker run -d --network trio-network --name mysql flask-db-image 
 
-s
