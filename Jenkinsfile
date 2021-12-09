@@ -10,22 +10,6 @@ pipeline {
                 checkout scm
             }
         }
-        stage('Docker Cleanup') {
-            steps {
-                sh """
-                echo "Stopping All Containers..."
-                docker stop \$(docker ps -a --format "{{.ID}}")
-
-                echo "Removing All Containers..."
-                docker rm \$(docker ps -a --format "{{.ID}}")
-
-                echo "Removing all Images..."
-                docker rmi \$(docker images --format "{{.ID}}")
-
-                docker network rm trio-network
-                """
-            }
-        }
         stage('Build and Push DB Image') {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'DOCKER_CREDENTIALS', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]){
