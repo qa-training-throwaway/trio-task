@@ -58,7 +58,7 @@ pipeline {
                         --network trio-network \
                         --name flask-app ${DOCKER_USERNAME}/flask-image
 
-                    docker run -d -p 80:80 --network trio-network --name proxy-container --mount type=bind,source=\${pwd}/nginx/nginx.conf,target=/etc/nginx/nginx.conf nginx
+                    docker run -d -p 80:80 --network trio-network --name proxy-container --mount type=bind,source=\$(pwd)/nginx/nginx.conf,target=/etc/nginx/nginx.conf nginx
                     """
                 }
             }
