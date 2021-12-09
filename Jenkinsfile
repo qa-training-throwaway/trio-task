@@ -4,7 +4,13 @@ pipeline {
         githubPush()
     }
     stages {
-        stage('Build') {
+        stage('Setup') {
+            steps {
+                deleteDir()
+                checkout scm
+            }
+        }
+        stage('Build and Push DB Image') {
             steps {
                 echo 'Building.'
             }
