@@ -24,7 +24,9 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'DOCKER_CREDENTIALS', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]){
                     sh """
+                        docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
                         docker build -t flask-db-image db
+                        docker push ${DOCKER_USERNAME}/flask-db-image
                     """
                 }
             }
@@ -33,7 +35,9 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'DOCKER_CREDENTIALS', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]){
                     sh """
+                        docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
                         docker build -t flask-image flask-app
+                        docker push ${DOCKER_USERNAME}/flask-image
                     """
                 }
             }
@@ -44,16 +48,17 @@ pipeline {
                 usernamePassword(credentialsId: 'MYSQL_CREDENTIALS', usernameVariable: 'MYSQL_USERNAME', passwordVariable: 'MYSQL_PASSWORD'),
                 ]){
                     sh """
+                    docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
                     docker run -d \
                         --network trio-network \
                         -e MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD} \
-                        --name mysql flask-db-image
+                        --name mysql ${DOCKER_USERNAME}/flask-db-image
 
                     docker run -d \
                         --network trio-network \
-                        --name flask-app flask-image
+                        --name flask-app ${DOCKER_USERNAME}/flask-image
 
-                    docker run -d -p 80:80 --network trio-network --name proxy-container --mount type=bind,source=/home/ubuntu/docker-exercises/trio-task/nginx/nginx.conf,target=/etc/nginx/nginx.conf nginx
+                    docker run -d -p 80:80 --network trio-network --name proxy-container --mount type=bind,source=\${pwd}/nginx/nginx.conf,target=/etc/nginx/nginx.conf nginx
                     """
                 }
             }
